@@ -2,6 +2,8 @@
 
 BSC 主网手续费路由合约 / Fee-taking swap router for QTSwap on BNB Smart Chain.
 
+交易逻辑与安全复测（2026-10-21）：[`TRADE_SECURITY_AUDIT.md`](TRADE_SECURITY_AUDIT.md)，原始记录在 [`docs/retest-artifacts/`](docs/retest-artifacts/)。
+
 ## Status
 
 - **Live (V3, verified):** [`0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5`](https://bscscan.com/address/0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5#code)

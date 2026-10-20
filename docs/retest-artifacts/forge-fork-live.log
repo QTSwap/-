@@ -1,0 +1,12 @@
+Compiling 21 files with Solc 0.8.24
+Solc 0.8.24 finished in 3.07s
+Compiler run successful!
+
+Ran 4 tests for test/ForkFeeLive.t.sol:ForkFeeLiveTest
+[PASS] testForkV2BuyFeeExact() (gas: 261483)
+[PASS] testForkV2SellFeeAndPaused() (gas: 694865)
+[PASS] testForkV3BuyFeeExact() (gas: 310728)
+[PASS] testLiveReadonly() (gas: 25480)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 721.70ms (1.53s CPU time)
+
+Ran 1 test suite in 728.50ms (721.70ms CPU time): 4 tests passed, 0 failed, 0 skipped (4 total tests)

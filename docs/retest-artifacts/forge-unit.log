@@ -1,0 +1,18 @@
+Compiling 1 files with Solc 0.8.24
+Solc 0.8.24 finished in 4.65s
+Compiler run successful!
+
+Ran 10 tests for test/FeeRouter.t.sol:FeeRouterTest
+[PASS] testFeeCapAndRescueOnlyOwner() (gas: 97882)
+[PASS] testFlapBuyPullsFeeFromInput() (gas: 604122)
+[PASS] testFourBuyAndSellFee() (gas: 956054)
+[PASS] testFourRejectsFakeManager() (gas: 709632)
+[PASS] testFourRejectsGraduated() (gas: 713408)
+[PASS] testPausedForwardsWithZeroFee() (gas: 122116)
+[PASS] testRejectsShortPathAndBadFeeSide() (gas: 121363)
+[PASS] testV2BuyTakes35Bps() (gas: 87563)
+[PASS] testV2SellSkimsOutput() (gas: 246579)
+[PASS] testValueMismatch() (gas: 67857)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 994.71µs (892.52µs CPU time)
+
+Ran 1 test suite in 5.44ms (994.71µs CPU time): 10 tests passed, 0 failed, 0 skipped (10 total tests)
