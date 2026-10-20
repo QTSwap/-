@@ -1,0 +1,101 @@
+ ✓ tests/routing.test.ts > 路线选择 > Flap 状态区分内盘和外盘 1ms
+ ✓ tests/routing.test.ts > 路线选择 > 曲线中的代币走 Flap 内盘 1ms
+ ✓ tests/routing.test.ts > 路线选择 > 已迁移的代币走 Pancake 外盘 0ms
+ ✓ tests/routing.test.ts > 路线选择 > 自定义池优先于内盘 0ms
+ ✓ tests/routing.test.ts > 路线选择 > 计价币不一致时经中转池再进内盘 1ms
+ ✓ tests/routing.test.ts > 路线选择 > 没有池子时给出明确失败 0ms
+ ✓ tests/routing.test.ts > 路线选择 > V2 报价与有效价格 0ms
+ ✓ tests/routing.test.ts > Flap 代币储备 > 用 circulatingSupply 算出曲线里剩余的代币，而不是留空 0ms
+ ✓ tests/routing.test.ts > Flap 代币储备 > 没有 circulatingSupply 时用同一条曲线的 r/h/k 和底池储备反推 0ms
+ ✓ tests/routing.test.ts > Flap 代币储备 > 自定义计价币优先用选中的直接池，没有再改另一边 0ms
+ ✓ tests/routing.test.ts > Flap 代币储备 > 卖光时显示 0，字段缺失时才是空 0ms
+ ✓ tests/routing.test.ts > 底池中转 > USDT 和 WBNB 储备太小的 V2 池不算有流动性 1ms
+ ✓ tests/routing.test.ts > 底池中转 > 两个方向报价接近才接受，差一个数量级的池子丢掉 0ms
+ ✓ tests/routing.test.ts > 底池中转 > 小额价格对、放大后崩掉的池子没有厚度 0ms
+ ✓ tests/routing.test.ts > 底池中转 > USDT 经 POP 再进代币，授权覆盖交易币和底池币 1ms
+ ✓ tests/routing.test.ts > 底池中转 > BNB 先换成 USDT 再进底池 0ms
+ ✓ tests/routing.test.ts > 底池中转 > USDT→WBNB→Token 合成一条 path，只授权起点 0ms
+ ✓ tests/routing.test.ts > 底池中转 > 夹了 V3 或 Flap 时不合成 path 0ms
+ ✓ tests/slippage.test.ts > 滑点 amountOutMin > 预设 0.5 / 1 / 3 / 5% 3ms
+ ✓ tests/slippage.test.ts > 滑点 amountOutMin > 自定义百分比换算成分母 10000 1ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > 默认每钱包 +10%、上限 +60% 2ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > 单钱包不加缓冲 0ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > 缺省配置：每多一个钱包 +1000 bps，上限 +6000 0ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > 面板自定义每钱包/上限会改变有效 bps 0ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > normalizeImpactBuffer 钳制范围并回落默认 0ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > amountOutMin 用缓冲后的 bps 更松 0ms
+ ✓ tests/slippage.test.ts > 抢跑多钱包滑点缓冲 > 识别滑点失败文案 0ms
+ ✓ tests/slippage.test.ts > 按底池建议冲击缓冲 > parseReserveNumber 识别无效储备 0ms
+ ✓ tests/slippage.test.ts > 按底池建议冲击缓冲 > N<2 / T<=0 / R 无效时禁用 0ms
+ ✓ tests/slippage.test.ts > 按底池建议冲击缓冲 > 底池 15000、买 15000、200 钱包、面板 5%：建议上限约 70% 10ms
+ ✓ tests/slippage.test.ts > 按底池建议冲击缓冲 > 底池 4000、买 15000、200 钱包：所需 >95% 并警告 0ms
+ ✓ tests/slippage.test.ts > 按底池建议冲击缓冲 > 冲击很小：建议缓冲为 0 0ms
+ ✓ tests/slippage.test.ts > 按底池建议冲击缓冲 > 公式与手算一致：N=2,R=100,T=20,f=0 0ms
+ ✓ tests/snipe.test.ts > 抢跑 gas > 最低价和增量都空着时沿用节点 1ms
+ ✓ tests/snipe.test.ts > 抢跑 gas > 第一笔取网络价和最低价里更高的，之后每次加上增量 1ms
+ ✓ tests/snipe.test.ts > 抢跑 gas > GAS Limit 空着就估算，填了必须落在范围内 1ms
+ ✓ tests/snipe.test.ts > 一批买卖共用 gas > 没有面板设置时直接用节点价，避免每个钱包再打一次 0ms
+ ✓ tests/snipe.test.ts > 一批买卖共用 gas > 填了最低价和增量时按 attempt 抬价，并可带固定 gasLimit 0ms
+ ✓ tests/snipe.test.ts > 抢跑买入保护 > 最大花费、最大价格、最低流动性留空或 0 不拦截 1ms
+ ✓ tests/snipe.test.ts > 抢跑买入保护 > 超花费、超价格、流动性不够或读不到时给出跳过原因 1ms
+ ✓ tests/snipe.test.ts > 防貔貅 > 卖不出或税率超标就跳过 0ms
+ ✓ tests/snipe.test.ts > 防貔貅 > 来回报价把损耗算成百分比，不含税的报价会把价格冲击算进去 0ms
+ ✓ tests/snipe.test.ts > 保留 BNB 和卖出百分比 > 余额要盖住 gas、预留和原生币买入 0ms
+ ✓ tests/snipe.test.ts > 保留 BNB 和卖出百分比 > 百分比换成万分比，间隔按秒夹到 1–60 秒 0ms
+ ✓ tests/snipe.test.ts > 任务次数 > 燃烧不看次数，轮询卖出才用卖出次数，定时留空回落到 3 0ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 保存抢跑滑点时不改策略草稿里的买入和卖出滑点 0ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 没有抢跑配置时不写入默认值，避免后来的设置被盖住 0ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 已经保存的抢跑滑点不会被另一份默认值改掉 0ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 冲击缓冲默认每钱包 +10%、上限 60%，面板值会持久化 0ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 按钮旁约计按已选可签名钱包加总，无效的每笔数量不当成 0 1ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 约计文案标明是估算，报价没回来或失败时不装成精确成交 3ms
+ ✓ tests/snipe.test.ts > 抢跑滑点独立于市值策略 > 固定数量的每笔卖出会保存，空着表示用表格 1ms
+ ✓ tests/snipe.test.ts > 约计明细 > 显示冲击、扣税后、有效滑点和最少到手 0ms
+ ✓ tests/approve-burst.test.ts > 连发授权 > 先把 nonce 连着签出去，再一起等回执 25ms
+ ✓ tests/approve-burst.test.ts > 连发授权 > 某一笔没广播出去就停，已经发出的仍等回执 0ms
+ ✓ tests/approve-burst.test.ts > 连发授权 > 上链失败只记那一笔，不取消已经广播的下一笔 1ms
+ ✓ tests/approve-burst.test.ts > 连发授权 > 瞬时失败用同一个 nonce 再试一次 0ms
+ ✓ tests/market-loop.test.ts > 北京时间 > 把东八区时间换成 UTC，不看运行环境时区 1ms
+ ✓ tests/market-loop.test.ts > 北京时间 > 拒绝空值和不可能的日期 0ms
+ ✓ tests/market-loop.test.ts > 已选钱包合计 > 把余额文本精确相加，不把缺失余额当成 0 0ms
+ ✓ tests/market-loop.test.ts > 可卖金额 > Flap 报价已是税后，税前按页面上的卖税倒推 0ms
+ ✓ tests/market-loop.test.ts > 可卖金额 > Pancake 报价未扣卖税，税后再乘页面上的卖税 0ms
+ ✓ tests/market-loop.test.ts > 轮询和定时的钱包进度 > 成功的钱包停止，失败的钱包留在下一轮 0ms
+ ✓ tests/market-loop.test.ts > 轮询和定时的钱包进度 > 定时模式用完尝试次数后停掉这个钱包 0ms
+ ✓ tests/market-loop.test.ts > 轮询和定时的钱包进度 > 用户中途停止时，还没发出的钱包不算一次尝试 0ms
+ ✓ tests/trade-notice.test.ts > approve action labels > names USDT and the selected address count 1ms
+ ✓ tests/trade-notice.test.ts > approve action labels > uses the token symbol, or 代币 when the symbol is unknown 0ms
+ ✓ tests/trade-notice.test.ts > result dialogs > writes preapprove success and failure counts 0ms
+ ✓ tests/trade-notice.test.ts > result dialogs > names a finished burn and counts wallets 0ms
+ ✓ tests/trade-notice.test.ts > result dialogs > counts unfinished wallets when a poll is stopped 0ms
+ ✓ tests/trade-notice.test.ts > result dialogs > describes the strategy that just started 0ms
+ ✓ tests/fee-router.test.ts > 成交路由 > 净额和合约按同一公式拆 1ms
+ ✓ tests/fee-router.test.ts > 成交路由 > 设置默认成交路由为最优，旧直连与缺省一并迁到最优 1ms
+ ✓ tests/fee-router.test.ts > 成交路由 > FeeRouter 地址由平台固定，空库和任意输入都是主网合约 0ms
+ ✓ tests/fee-swap.test.ts > 外盘税率和带税卖出 > Flap 的 300 / 500 显示成约 3% 和 5%，没读到时不写成 0% 1ms
+ ✓ tests/fee-swap.test.ts > 外盘税率和带税卖出 > 卖出带税代币时按卖税缩小报价，买入按买税，中转跳不扣 0ms
+ ✓ tests/fee-swap.test.ts > 一键买卖并发 > 按选中钱包数同时发，不看设置里的同时执行数，无硬上限 0ms
+ ✓ tests/crypto.test.ts > 主密码加密 > AES-GCM 往返，错误密码无法解开 39ms
+ ✓ tests/crypto.test.ts > 主密码加密 > 校验块能识别正确的主密码 14ms
+ ✓ tests/crypto.test.ts > 主密码加密 > 篡改密文会失败 8ms
+ ✓ tests/burst-send.test.ts > burstSend 批量瞬时广播 > 不同钱包并发广播；同一钱包本地递增 nonce；全部广播后才等回执 454ms
+ ✓ tests/burst-send.test.ts > burstSend 批量瞬时广播 > 单笔失败不影响其他钱包 0ms
+ FAIL  tests/access-cors.test.ts [ tests/access-cors.test.ts ]
+Error: Cannot find module '../api/access' imported from '/tmp/mm-retest/tests/access-cors.test.ts'
+Caused by: Error: Failed to load url ../api/access (resolved id: ../api/access) in /tmp/mm-retest/tests/access-cors.test.ts. Does the file exist?
+ FAIL  tests/access.test.ts [ tests/access.test.ts ]
+Error: Cannot find module '../src/access/dispatch' imported from '/tmp/mm-retest/tests/access.test.ts'
+Caused by: Error: Failed to load url ../src/access/dispatch (resolved id: ../src/access/dispatch) in /tmp/mm-retest/tests/access.test.ts. Does the file exist?
+ FAIL  tests/collect.test.ts [ tests/collect.test.ts ]
+Error: Cannot find module '../src/services/controller' imported from '/tmp/mm-retest/tests/collect.test.ts'
+Caused by: Error: Failed to load url ../src/services/controller (resolved id: ../src/services/controller) in /tmp/mm-retest/tests/collect.test.ts. Does the file exist?
+ FAIL  tests/csp.test.ts [ tests/csp.test.ts ]
+Error: Cannot find module '../src/shared/csp' imported from '/tmp/mm-retest/tests/csp.test.ts'
+Caused by: Error: Failed to load url ../src/shared/csp (resolved id: ../src/shared/csp) in /tmp/mm-retest/tests/csp.test.ts. Does the file exist?
+ FAIL  tests/disperse.test.ts [ tests/disperse.test.ts ]
+Error: Cannot find module '../src/services/controller' imported from '/tmp/mm-retest/tests/disperse.test.ts'
+Caused by: Error: Failed to load url ../src/services/controller (resolved id: ../src/services/controller) in /tmp/mm-retest/tests/collect.test.ts. Does the file exist?
+ Test Files  5 failed | 10 passed (15)
+      Tests  82 passed (82)
+   Start at  19:27:11
+   Duration  1.51s (transform 451ms, setup 0ms, collect 766ms, tests 599ms, environment 3ms, prepare 798ms)

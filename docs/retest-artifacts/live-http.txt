@@ -1,0 +1,4 @@
+OPTIONS /api/access -> 204 allow-origin=* methods=GET, POST, OPTIONS headers=content-type max-age=86400
+OPTIONS /api/access/admin -> 204 same
+OPTIONS /api/access/device -> 204 same
+site CSP script-src 'self'; no unsafe-inline; no unsafe-eval; frame-ancestors 'self'

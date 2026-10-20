@@ -1,0 +1,14 @@
+rpc=https://bsc.publicnode.com
+fee=0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5
+feeBps 35
+paused false
+owner 0xDE54Ecf43E8df45aC9bDb9138Eba3c3895545e1C
+treasury 0xDE54Ecf43E8df45aC9bDb9138Eba3c3895545e1C
+wbnb 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c
+codesize 8719
+fourToken=0xaee20ea52302439a05fe197b9de4b79caac8ffff liquidityAdded=false tm=0x5c952063c7fc8610FFDB798152D69F0B9550762b version=2
+flapPortalCodeBytes=2882
+forkBlock=128801768 chainId=56 anvil=1.8.5
+buy FeeCollected wei=175000000000000 expect=175000000000000
+sell FeeCollected wei=60791871001159
+four-retry=archive 403 personal token required

@@ -1,0 +1,209 @@
+{
+  "at": "2026-10-20T19:27:17.746Z",
+  "anvil": {
+    "ver": "anvil/v1.8.5",
+    "block": 128801768
+  },
+  "feeRouterDeployed": "0x87B9798052dF9F00BF9A9DF61716Ae1c96dB8fbC",
+  "liveV3": "0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5",
+  "rows": [
+    {
+      "path": "live-FeeRouter-V3-readonly",
+      "ok": true,
+      "note": "bps=35 paused=false owner=0xDE54Ecf43E8df45aC9bDb9138Eba3c3895545e1C treasury=0xDE54Ecf43E8df45aC9bDb9138Eba3c3895545e1C"
+    },
+    {
+      "path": "fee-swapV2-buy-bnb-usdt",
+      "ok": true,
+      "estimateMs": 130.5,
+      "mineMs": 63.8,
+      "totalMs": 194.3,
+      "gasUsed": "170080",
+      "feeOk": false
+    },
+    {
+      "path": "direct-pancake-v2-buy",
+      "ok": true,
+      "estimateMs": 40.3,
+      "mineMs": 48.8,
+      "totalMs": 89.1,
+      "gasUsed": "94440",
+      "feeOk": true
+    },
+    {
+      "path": "approve-usdt-feeRouter",
+      "ok": true,
+      "estimateMs": 58,
+      "mineMs": 46.6,
+      "totalMs": 104.6,
+      "gasUsed": "46206"
+    },
+    {
+      "path": "fee-swapV2-sell-usdt-bnb",
+      "ok": true,
+      "estimateMs": 84.3,
+      "mineMs": 55.9,
+      "totalMs": 140.1,
+      "gasUsed": "211893",
+      "feeOk": false
+    },
+    {
+      "path": "fee-swapV2-paused-no-fee",
+      "ok": true,
+      "estimateMs": 32.4,
+      "mineMs": 44.6,
+      "totalMs": 76.9,
+      "gasUsed": "126078",
+      "feeOk": true
+    },
+    {
+      "path": "four-probe",
+      "ok": true,
+      "note": "graduated=false tm=0x5c952063c7fc8610FFDB798152D69F0B9550762b"
+    },
+    {
+      "path": "four-tryBuy-quote",
+      "ok": true,
+      "note": "est=4580305591499742000000000"
+    },
+    {
+      "path": "fee-swapFour-buy",
+      "ok": false,
+      "estimateMs": 1039.4,
+      "error": "could not coalesce error (error={ \"code\": -32603, \"message\": \"Fork Error: Transport(HttpError(HttpError { status: 403, body: \\\"{\\\\\\\"jsonrpc\\\\\\\":\\\\\\\"2.0\\\\\\\",\\\\\\\"error\\\\\\\":{\\\\\\\"code\\\\\\\":-32602,\\\\\\\"message\\\\\\\":\\\\\\\"Archive r"
+    },
+    {
+      "path": "approve-meme-feeRouter",
+      "ok": true,
+      "estimateMs": 96.1,
+      "mineMs": 44.8,
+      "totalMs": 140.9,
+      "gasUsed": "49099"
+    },
+    {
+      "path": "fee-swapFour-sell",
+      "ok": false,
+      "error": "estimateGas: execution reverted: \"GW\" (action=\"estimateGas\", data=\"0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "path": "direct-four-buy",
+      "ok": true,
+      "estimateMs": 16,
+      "mineMs": 55.6,
+      "totalMs": 71.6,
+      "gasUsed": "268646",
+      "feeOk": true
+    },
+    {
+      "path": "flap-portal-code",
+      "ok": true,
+      "note": "codeBytes=2882"
+    },
+    {
+      "path": "fee-swapFlap",
+      "ok": false,
+      "error": "SKIP: 本轮没有可用的 Flap 曲线代币做往返。Portal 代码见 flap-portal-code；抽费由 forge testFlapBuyPullsFeeFromInput 覆盖。原脚本把本行硬编码为 ok:true。"
+    },
+    {
+      "path": "sec-reject-fake-tm",
+      "ok": true,
+      "note": "reverted"
+    },
+    {
+      "path": "sec-rescue-onlyOwner",
+      "ok": true,
+      "note": "reverted for non-owner"
+    },
+    {
+      "path": "membership-gate-code",
+      "ok": false,
+      "error": "SKIP: src/ui/access-label.ts 不在本审计包，无法执行 featureNeedsMembership。Cannot find module '/tmp/mm-retest/src/ui/access-label.ts' imported from /tmp/mm-retest/scripts/fork-audit-sim.ts"
+    },
+    {
+      "path": "fee-router-hardcoded",
+      "ok": true,
+      "note": "0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5"
+    },
+    {
+      "path": "preapprove-spender-fee-mode",
+      "ok": false,
+      "note": "strategyPreapprovePlan spenders=0x5c952063c7fc8610ffdb798152d69f0b9550762b includesFeeRouter=false。原 SIM 脚本把本行硬编码为 true，且 controller.resolveSpender 不在本包。"
+    }
+  ],
+  "burst10": {
+    "n": 10,
+    "uniqueWallets": 10,
+    "samples": 10,
+    "fails": 0,
+    "wallMs": 109.4,
+    "p50": 108.9,
+    "p95": 109.3,
+    "max": 109.3
+  },
+  "burst100": {
+    "n": 100,
+    "uniqueWallets": 20,
+    "samples": 100,
+    "fails": 60,
+    "wallMs": 524,
+    "p50": 98.5,
+    "p95": 146.8,
+    "max": 147.2
+  },
+  "speedSummary": {
+    "fee-swapV2-buy-bnb-usdt": {
+      "totalMs": 194.3,
+      "estimateMs": 130.5,
+      "mineMs": 63.8,
+      "gasUsed": "170080",
+      "ok": true,
+      "feeOk": false
+    },
+    "direct-pancake-v2-buy": {
+      "totalMs": 89.1,
+      "estimateMs": 40.3,
+      "mineMs": 48.8,
+      "gasUsed": "94440",
+      "ok": true,
+      "feeOk": true
+    },
+    "approve-usdt-feeRouter": {
+      "totalMs": 104.6,
+      "estimateMs": 58,
+      "mineMs": 46.6,
+      "gasUsed": "46206",
+      "ok": true
+    },
+    "fee-swapV2-sell-usdt-bnb": {
+      "totalMs": 140.1,
+      "estimateMs": 84.3,
+      "mineMs": 55.9,
+      "gasUsed": "211893",
+      "ok": true,
+      "feeOk": false
+    },
+    "fee-swapV2-paused-no-fee": {
+      "totalMs": 76.9,
+      "estimateMs": 32.4,
+      "mineMs": 44.6,
+      "gasUsed": "126078",
+      "ok": true,
+      "feeOk": true
+    },
+    "approve-meme-feeRouter": {
+      "totalMs": 140.9,
+      "estimateMs": 96.1,
+      "mineMs": 44.8,
+      "gasUsed": "49099",
+      "ok": true
+    },
+    "direct-four-buy": {
+      "totalMs": 71.6,
+      "estimateMs": 16,
+      "mineMs": 55.6,
+      "gasUsed": "268646",
+      "ok": true,
+      "feeOk": true
+    }
+  }
+}
