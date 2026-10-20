@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 /// @title FeeRouter
-/// @notice 薄转发：用户在同一笔交易里先经过本合约，再进 Pancake V2 / V3 或 Flap。
+/// @notice 薄转发：用户在同一笔交易里先经过本合约，再进 Pancake V2 / V3、Flap 或 FOUR.meme。
 /// @dev 不做报价。feeSide：0 不抽，1 从付出的输入抽，2 从换回的计价币抽。暂停时费率按 0，原样转发。
 contract FeeRouter {
     uint256 public constant BPS = 10_000;
@@ -15,6 +15,11 @@ contract FeeRouter {
     uint256 public feeBps;
     bool public paused;
     address public immutable wbnb;
+
+    /// @dev FOUR.meme 官方地址（BSC）。
+    address public constant FOUR_HELPER = 0xF251F83e40a78868FcfA3FA4599Dad6494E46034;
+    address public constant FOUR_TM_V1 = 0xEC4549caDcE5DA21Df6E6422d448034B5233bFbC;
+    address public constant FOUR_TM_V2 = 0x5c952063c7fc8610FFDB798152D69F0B9550762b;
 
     uint256 private locked;
 
@@ -29,6 +34,7 @@ contract FeeRouter {
     uint8 private constant VENUE_V2 = 0;
     uint8 private constant VENUE_V3 = 1;
     uint8 private constant VENUE_FLAP = 2;
+    uint8 private constant VENUE_FOUR = 3;
 
     event OwnerTransferred(address indexed previousOwner, address indexed newOwner);
     event TreasurySet(address indexed treasury);
@@ -36,7 +42,7 @@ contract FeeRouter {
     event PausedSet(bool paused);
     event FeeCollected(address indexed payer, address indexed token, uint256 amount);
     /// @notice 每一笔成功转发都发。暂停或费率为 0 时 feeAmount 为 0。token 为 address(0) 表示 BNB。
-    /// @param venue 0 Pancake V2，1 Pancake V3，2 Flap。
+    /// @param venue 0 Pancake V2，1 Pancake V3，2 Flap，3 FOUR.meme。
     /// @param amountOutMin 调用时传入的最小输出，不是实际到账。
     event TradeRouted(
         address indexed trader,
@@ -316,6 +322,140 @@ contract FeeRouter {
         _routed(log);
     }
 
+
+    /// @notice FOUR.meme 内盘。tokenManager 必须是 V1/V2 官方地址，且与 Helper3.getTokenInfo 一致、未毕业。
+    /// @param quoteToken address(0) = BNB。买入 feeSide=1 从输入抽；卖出 feeSide=2 从输出抽。
+    /// @param isBuy true=用计价币买 meme；false=卖 meme 换计价币。
+    function swapFour(
+        address tokenManager,
+        address memeToken,
+        address quoteToken,
+        uint256 amountIn,
+        uint256 amountOutMin,
+        bool isBuy,
+        uint8 feeSide
+    ) external payable nonReentrant {
+        if (memeToken == address(0) || feeSide > 2) revert BadPath();
+        _assertFourManager(tokenManager, memeToken, quoteToken);
+        if (isBuy) _fourBuy(tokenManager, memeToken, quoteToken, amountIn, amountOutMin, feeSide);
+        else _fourSell(tokenManager, memeToken, quoteToken, amountIn, amountOutMin, feeSide);
+    }
+
+    function _assertFourManager(address tokenManager, address memeToken, address quoteToken) private view {
+        if (tokenManager != FOUR_TM_V1 && tokenManager != FOUR_TM_V2) revert BadPath();
+        (
+            ,
+            address tm,
+            address quote,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            bool liquidityAdded
+        ) = IFourHelper(FOUR_HELPER).getTokenInfo(memeToken);
+        if (liquidityAdded || tm != tokenManager || quote != quoteToken) revert BadPath();
+    }
+
+    function _fourBuy(
+        address tokenManager,
+        address memeToken,
+        address quoteToken,
+        uint256 amountIn,
+        uint256 amountOutMin,
+        uint8 feeSide
+    ) private {
+        uint256 poolIn = amountIn;
+        uint256 feeAmount = 0;
+        address feeToken = address(0);
+        if (quoteToken == address(0)) {
+            if (msg.value != amountIn) revert ValueMismatch();
+            if (feeSide == 1) (feeAmount, poolIn) = _takeBnb(amountIn);
+        } else {
+            if (msg.value != 0) revert ValueMismatch();
+            _pull(quoteToken, msg.sender, amountIn);
+            if (feeSide == 1) (feeAmount, poolIn) = _takeToken(quoteToken, amountIn);
+            _approve(quoteToken, tokenManager, poolIn);
+        }
+        uint256 valueIn = quoteToken == address(0) ? poolIn : 0;
+        address recipient = feeSide == 2 ? address(this) : msg.sender;
+        uint256 memeBefore = feeSide == 2 ? _balanceOf(memeToken) : 0;
+        if (tokenManager == FOUR_TM_V2) {
+            IFourTM2(tokenManager).buyTokenAMAP{value: valueIn}(memeToken, recipient, poolIn, amountOutMin);
+        } else {
+            IFourTM1(tokenManager).purchaseTokenAMAP{value: valueIn}(0, memeToken, recipient, poolIn, amountOutMin);
+        }
+        if (feeSide == 2) {
+            feeAmount = _skimToken(memeToken, _balanceOf(memeToken) - memeBefore);
+            feeToken = memeToken;
+        } else if (feeSide == 1) {
+            feeToken = quoteToken;
+        }
+        RouteLog memory log;
+        log.venue = tokenManager;
+        log.kind = VENUE_FOUR;
+        log.feeSide = feeSide;
+        log.tokenIn = quoteToken;
+        log.tokenOut = memeToken;
+        log.amountIn = amountIn;
+        log.amountOutMin = amountOutMin;
+        log.feeAmount = feeAmount;
+        log.feeToken = feeToken;
+        _routed(log);
+    }
+
+    function _fourSell(
+        address tokenManager,
+        address memeToken,
+        address quoteToken,
+        uint256 amountIn,
+        uint256 amountOutMin,
+        uint8 feeSide
+    ) private {
+        if (msg.value != 0) revert ValueMismatch();
+        _pull(memeToken, msg.sender, amountIn);
+        // feeSide==1 on sell would skim meme before sell; not used by mm-web (sells use feeSide=2).
+        uint256 poolIn = amountIn;
+        uint256 feeAmount = 0;
+        address feeToken = address(0);
+        if (feeSide == 1) (feeAmount, poolIn) = _takeToken(memeToken, amountIn);
+        _approve(memeToken, tokenManager, poolIn);
+        uint256 bnbBefore = address(this).balance;
+        uint256 tokenBefore = quoteToken == address(0) ? 0 : _balanceOf(quoteToken);
+        if (tokenManager == FOUR_TM_V2) {
+            IFourTM2(tokenManager).sellToken(0, memeToken, poolIn, amountOutMin, 0, address(0));
+        } else {
+            IFourTM1(tokenManager).saleToken(memeToken, poolIn);
+        }
+        if (quoteToken == address(0)) {
+            uint256 got = address(this).balance - bnbBefore;
+            if (tokenManager == FOUR_TM_V1 && got < amountOutMin) revert BadPath();
+            if (feeSide == 2) feeAmount = _skimBnb(got);
+            else _payBnb(msg.sender, got);
+        } else {
+            uint256 got = _balanceOf(quoteToken) - tokenBefore;
+            if (tokenManager == FOUR_TM_V1 && got < amountOutMin) revert BadPath();
+            if (feeSide == 2) feeAmount = _skimToken(quoteToken, got);
+            else _payToken(quoteToken, msg.sender, got);
+        }
+        if (feeSide == 1) feeToken = memeToken;
+        else if (feeSide == 2) feeToken = quoteToken;
+        RouteLog memory log;
+        log.venue = tokenManager;
+        log.kind = VENUE_FOUR;
+        log.feeSide = feeSide;
+        log.tokenIn = memeToken;
+        log.tokenOut = quoteToken;
+        log.amountIn = amountIn;
+        log.amountOutMin = amountOutMin;
+        log.feeAmount = feeAmount;
+        log.feeToken = feeToken;
+        _routed(log);
+    }
+
     receive() external payable {}
 
     function _v3(V3Swap calldata swap, address tokenIn, uint256 amountIn, address recipient) private {
@@ -464,4 +604,34 @@ interface IFlap {
     }
 
     function swapExactInput(ExactInputParams calldata params) external payable returns (uint256);
+}
+
+interface IFourHelper {
+    function getTokenInfo(address token)
+        external
+        view
+        returns (
+            uint256 version,
+            address tokenManager,
+            address quote,
+            uint256 lastPrice,
+            uint256 tradingFeeRate,
+            uint256 minTradingFee,
+            uint256 launchTime,
+            uint256 offers,
+            uint256 maxOffers,
+            uint256 funds,
+            uint256 maxFunds,
+            bool liquidityAdded
+        );
+}
+
+interface IFourTM2 {
+    function buyTokenAMAP(address token, address to, uint256 funds, uint256 minAmount) external payable;
+    function sellToken(uint256 origin, address token, uint256 amount, uint256 minFunds, uint256 feeRate, address feeRecipient) external;
+}
+
+interface IFourTM1 {
+    function purchaseTokenAMAP(uint256 origin, address token, address to, uint256 funds, uint256 minAmount) external payable;
+    function saleToken(address token, uint256 amount) external;
 }

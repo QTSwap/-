@@ -4,58 +4,52 @@ BSC 主网手续费路由合约 / Fee-taking swap router for QTSwap on BNB Smart
 
 ## Status
 
-- BSC: `0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89`
-- BscScan verification: **still Unverified** — deployment bytecode must match keccak `0xbbc0ffb4…` source; current `src/FeeRouter.sol` is the readable TradeRouted source (ABI-compatible) but may not recompile to identical bytecode.
-- Readable source also mirrored in issue #1.
+- **Live (V3, verified):** [`0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5`](https://bscscan.com/address/0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5#code)
+- Adds `swapFour` for FOUR.meme bonding-curve trades (venue = 3).
+- Previous V2 (Flap/V2/V3 only): `0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89` — retired for new trades.
+- Previous V1: `0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0` — retired.
 
 ## 合约地址 / Address
 
-- **BSC Mainnet:** [`0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89`](https://bscscan.com/address/0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89)
-- **BscScan (verified):** https://bscscan.com/address/0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89#code
-- Previous unverified deployment `0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0` is retired.
-- Deploy tx: [`0x269db7125a3af6b2dbb0898686e0d82bac4d636a0f8d593675b30b60b7ba0c51`](https://bscscan.com/tx/0x269db7125a3af6b2dbb0898686e0d82bac4d636a0f8d593675b30b60b7ba0c51)
-- Ownership transfer: [`0x57b5dca8d039b539dd7a1c4da5b1e243c755de155bf065db4639744abd6050bb`](https://bscscan.com/tx/0x57b5dca8d039b539dd7a1c4da5b1e243c755de155bf065db4639744abd6050bb)
+- **BSC Mainnet:** [`0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5`](https://bscscan.com/address/0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5)
+- **BscScan (verified):** https://bscscan.com/address/0xBc2949D5eB9dba91eb51111D9D1Ad313b658FEa5#code
+- Deploy tx: [`0xc0ad936359dbb326e9c014ba0ceb1061558cdbb63b001d282f0bf5d2cd4eba64`](https://bscscan.com/tx/0xc0ad936359dbb326e9c014ba0ceb1061558cdbb63b001d282f0bf5d2cd4eba64)
+- Ownership transfer: [`0xe5ecb5c564935271fd66a61822aec20f075732b6610c166a9760046dd751b0dc`](https://bscscan.com/tx/0xe5ecb5c564935271fd66a61822aec20f075732b6610c166a9760046dd751b0dc)
 
 ## 做什么 / What it does
 
-中文：薄转发合约。用户在同一笔交易里先经过 FeeRouter，再进 Pancake V2 / V3 或 Flap。默认抽 **0.35%**（`feeBps = 35`），费用进 treasury。`feeSide`：0 不抽，1 从输入抽，2 从输出抽。暂停时按 0 费率原样转发。每笔成功转发发 `TradeRouted`。
+中文：薄转发合约。用户在同一笔交易里先经过 FeeRouter，再进 Pancake V2 / V3、Flap 或 FOUR.meme 内盘。默认抽 **0.35%**（`feeBps = 35`），费用进 treasury。`feeSide`：0 不抽，1 从输入抽，2 从输出抽。暂停时按 0 费率原样转发。每笔成功转发发 `TradeRouted`（venue：0=V2，1=V3，2=Flap，3=FOUR）。
 
-English: Thin forwarding router. Each trade goes through FeeRouter then Pancake V2/V3 or Flap. Default fee **0.35%** (`feeBps = 35`) to treasury. `feeSide`: 0 none, 1 take from input, 2 take from output. When paused, fee is treated as 0. Emits `TradeRouted` on every successful forward.
+English: Thin forwarding router. Each trade goes through FeeRouter then Pancake V2/V3, Flap, or FOUR.meme. Default fee **0.35%** to treasury. Emits `TradeRouted` (venue 0/1/2/3).
+
+### swapFour
+
+```
+swapFour(tokenManager, memeToken, quoteToken, amountIn, amountOutMin, isBuy, feeSide)
+```
+
+- `tokenManager` must be official FOUR V1 `0xEC45…bFbC` or V2 `0x5c95…762b`, and must match Helper3 `getTokenInfo(memeToken).tokenManager`; token must not be graduated (`liquidityAdded == false`).
+- Buy: feeSide=1 takes fee from quote (BNB or ERC20), then `buyTokenAMAP` / `purchaseTokenAMAP` to `msg.sender`.
+- Sell: pulls meme tokens, calls `sellToken` / `saleToken`, feeSide=2 skims quote out to treasury then user.
 
 ## Compile / 编译设置
-
-Live deployment used:
 
 | Setting | Value |
 |--------|--------|
 | solc | 0.8.24+commit.e11b9ed9 |
-| optimizer | true |
-| optimizer_runs | 200 |
-| via_ir / viaIR | true |
+| optimizer | true / runs 200 |
+| viaIR | true |
 | evmVersion | cancun |
 
-## Constructor arguments (from deploy tx)
+## Constructor arguments
 
 ```
-initialOwner    = 0xEa99B48406d11Caf8F3885779b8C341aF9020F11  # deployer; ownership later transferred
+initialOwner    = 0xEa99B48406d11Caf8F3885779b8C341aF9020F11
 initialTreasury = 0xDE54Ecf43E8df45aC9bDb9138Eba3c3895545e1C
-wrappedNative   = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c  # WBNB
+wrappedNative   = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c
 ```
 
-ABI-encoded: see `constructor-args.txt`.
-
-Current on-chain `owner` / `treasury` are both `0xDE54…5e1C` after the transfer tx.
-
-## Source note / 源码说明
-
-`src/FeeRouter.sol` is the current canonical FeeRouter (ABI matches the live contract, including `TradeRouted`).
-
-The exact file bytes that produced the live bytecode had Solidity metadata source keccak
-`0xbbc0ffb427cb31c94ce2b28447149c00f1313184e074654336e874ab4abc9c51`
-(IPFS CID `QmWNBY3ZfCKEGiP9F9gAMH2itFBL3vThXRoKqK93FUnk7U`, never pinned to a public gateway).
-The matching Foundry artifact is kept at `artifacts/FeeRouter.deployed.json`.
-
-See `VERIFY.md` for BscScan / Sourcify verification status and commands.
+On-chain `owner` / `treasury` are both `0xDE54…5e1C` after ownership transfer.
 
 ## License
 
