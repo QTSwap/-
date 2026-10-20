@@ -2,7 +2,7 @@
 
 ## Status (2026-10-20 Asia/Hong_Kong)
 
-- Contract: `0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0` (BSC / chainid 56)
+- Contract: `0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89` (BSC / chainid 56)
 - BscScan Contract tab: **not verified** (API requires key; none in env)
 - Sourcify: **no match** (`runtimeMatch: null`)
 - Blocker for exact verify: the Solidity source that hashes to metadata keccak
@@ -34,7 +34,7 @@ export PATH="$HOME/.foundry/bin:$PATH"
 forge build
 
 forge verify-contract \
-  0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0 \
+  0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89 \
   src/FeeRouter.sol:FeeRouter \
   --chain 56 \
   --verifier sourcify \
@@ -43,7 +43,7 @@ forge verify-contract \
 
 # BscScan / Etherscan v2 (needs API key):
 forge verify-contract \
-  0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0 \
+  0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89 \
   src/FeeRouter.sol:FeeRouter \
   --chain 56 \
   --verifier etherscan \

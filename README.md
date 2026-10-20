@@ -4,13 +4,15 @@ BSC 主网手续费路由合约 / Fee-taking swap router for QTSwap on BNB Smart
 
 ## Status
 
-- BSC: `0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0`
+- BSC: `0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89`
 - BscScan verification: **still Unverified** — deployment bytecode must match keccak `0xbbc0ffb4…` source; current `src/FeeRouter.sol` is the readable TradeRouted source (ABI-compatible) but may not recompile to identical bytecode.
 - Readable source also mirrored in issue #1.
 
 ## 合约地址 / Address
 
-- **BSC Mainnet:** [`0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0`](https://bscscan.com/address/0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0)
+- **BSC Mainnet:** [`0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89`](https://bscscan.com/address/0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89)
+- **BscScan (verified):** https://bscscan.com/address/0x5878A2ea7429e7ba44dF39572Cf24741deB7ab89#code
+- Previous unverified deployment `0x20664B433eB6fcf7a2c023eB58B26A02cBeF53a0` is retired.
 - Deploy tx: [`0x269db7125a3af6b2dbb0898686e0d82bac4d636a0f8d593675b30b60b7ba0c51`](https://bscscan.com/tx/0x269db7125a3af6b2dbb0898686e0d82bac4d636a0f8d593675b30b60b7ba0c51)
 - Ownership transfer: [`0x57b5dca8d039b539dd7a1c4da5b1e243c755de155bf065db4639744abd6050bb`](https://bscscan.com/tx/0x57b5dca8d039b539dd7a1c4da5b1e243c755de155bf065db4639744abd6050bb)
 
